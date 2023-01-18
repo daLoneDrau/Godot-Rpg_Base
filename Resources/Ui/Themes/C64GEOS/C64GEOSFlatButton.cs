@@ -1,6 +1,5 @@
 using Base.Resources.Ui;
 using Godot;
-using Test_App.MasterRogueSpire.CustomResources;
 
 namespace Base.Resources.Ui.Themes.C64GEOS
 {
