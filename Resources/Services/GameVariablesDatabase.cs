@@ -89,12 +89,12 @@ namespace Base.Resources.Services
                     arr = ArrayUtilities.Instance.ExtendArray(fileName, arr);
                     if (dir.CurrentIsDir())
                     {
-                        // GD.Print("Found directory:", fileName);
+                        GD.Print("Found directory:", fileName);
                         LoadDirectory(arr);
                     }
                     else
                     {
-                        // GD.Print("Found file:", fileName);
+                        GD.Print("Found file:", fileName);
 
                         string key = fileName.Substr(0, fileName.Length - 5);
                         
@@ -176,6 +176,113 @@ namespace Base.Resources.Services
         {
             Instance = this;
             LoadDirectory("variables");
+        }
+        public void AddResource(string key, Resource res, bool ignoreDuplicates = false)
+        {
+            if (res is BoolVariable)
+            {
+                try
+                {
+                    var s = BoolVariable[key];
+                }
+                catch (RPGException)
+                {
+                    // catching an error means the variable isn't there. it can be added safely
+                    BoolVariable.Add(key, (BoolVariable)res);
+                    BoolVariable[key].RuntimeValue = BoolVariable[key].InitialValue;
+                }
+                finally
+                {
+                    if (!ignoreDuplicates)
+                    {
+                        throw new RPGException(ErrorMessage.INTERNAL_ERROR, "Duplicate Variable defined: " + key);
+                    }
+                }
+            }
+            else if (res is IntVariable)
+            {
+                try
+                {
+                    var s = IntVariable[key];
+                }
+                catch (RPGException)
+                {
+                    // catching an error means the variable isn't there. it can be added safely
+                    IntVariable.Add(key, (IntVariable)res);
+                    IntVariable[key].RuntimeValue = IntVariable[key].InitialValue;
+                }
+                finally
+                {
+                    if (!ignoreDuplicates)
+                    {
+                        throw new RPGException(ErrorMessage.INTERNAL_ERROR, "Duplicate Variable defined: " + key);
+                    }
+                }
+            }
+            else if (res is FloatVariable)
+            {
+                try
+                {
+                    var s = FloatVariable[key];
+                }
+                catch (RPGException)
+                {
+                    // catching an error means the variable isn't there. it can be added safely
+                    FloatVariable.Add(key, (FloatVariable)res);
+                    FloatVariable[key].RuntimeValue = FloatVariable[key].InitialValue;
+                }
+                finally
+                {
+                    if (!ignoreDuplicates)
+                    {
+                        throw new RPGException(ErrorMessage.INTERNAL_ERROR, "Duplicate Variable defined: " + key);
+                    }
+                }
+            }
+            else if (res is StringVariable)
+            {
+                try
+                {
+                    var s = StringVariable[key];
+                }
+                catch (RPGException)
+                {
+                    // catching an error means the variable isn't there. it can be added safely
+                    StringVariable.Add(key, (StringVariable)res);
+                    StringVariable[key].RuntimeValue = StringVariable[key].InitialValue;
+                }
+                finally
+                {
+                    if (!ignoreDuplicates)
+                    {
+                        throw new RPGException(ErrorMessage.INTERNAL_ERROR, "Duplicate Variable defined: " + key);
+                    }
+                }
+            }
+            else if (res is StringArrayVariable)
+            {
+                try
+                {
+                    var s = StringArrayVariable[key];
+                }
+                catch (RPGException)
+                {
+                    // catching an error means the variable isn't there. it can be added safely
+                    StringArrayVariable.Add(key, (StringArrayVariable)res);
+                    StringArrayVariable[key].RuntimeValue = StringArrayVariable[key].InitialValue;
+                }
+                finally
+                {
+                    if (!ignoreDuplicates)
+                    {
+                        throw new RPGException(ErrorMessage.INTERNAL_ERROR, "Duplicate Variable defined: " + key);
+                    }
+                }
+            }
+            else
+            {
+                throw new RPGException(ErrorMessage.INTERNAL_ERROR, "unexpected type " + res);
+            }
         }
     }
     public class EventsWithDisabledFlagsIndexer

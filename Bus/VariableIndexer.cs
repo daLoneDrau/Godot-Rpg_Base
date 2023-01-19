@@ -48,6 +48,20 @@ namespace Base.Bus
         /// <returns></returns>
         public List<K> Keys { get { return new List<K>(dictionary.Keys); } }
         /// <summary>
+        /// Adds a value.
+        /// </summary>
+        /// <param name="k">the variable's name</param>
+        /// <param name="v">the variable's value</param>
+        /// <param name="allowReplace">if true then variables can be replaced; otherwise replacing an existing variable causes an error</param>
+        public void Add(K k, V v, bool allowReplace = false)
+        {
+            if (dictionary.ContainsKey(k) && !allowReplace)
+            {
+                throw new RPGException(ErrorMessage.INTERNAL_BAD_ARGUMENT, "Invalid Key " + k);
+            }
+            dictionary[k] = v;
+        }
+        /// <summary>
         /// Gets a random entry.
         /// </summary>
         /// <returns></returns>
