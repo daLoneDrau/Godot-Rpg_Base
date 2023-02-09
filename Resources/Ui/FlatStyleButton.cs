@@ -39,6 +39,7 @@ namespace Base.Resources.Ui
             base._Ready();
             Connect("pressed", this, "pressed");
             Connect("button_down", this, "button_down");
+            Connect("button_up", this, "button_up");
             Initialize();
         }
         protected abstract void Initialize();
@@ -50,7 +51,12 @@ namespace Base.Resources.Ui
         {
             ButtonDown();
         }
+        public void button_up()
+        {
+            ButtonUp();
+        }
         protected abstract void ButtonDown();
         protected abstract void ButtonPressed();
+        protected abstract void ButtonUp();
     }
 }

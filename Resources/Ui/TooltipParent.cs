@@ -60,12 +60,22 @@ namespace Base.Resources.Ui
             float x = 0, y = 0;
             if (Alignment == Vector2.Right)
             {
+                y = GetGlobalTransformWithCanvas().origin.y + YOffset;
+                float rightAnchor = TopLevelContainer.AnchorRight;
+                float leftMargin = TopLevelContainer.MarginLeft;
+                if (rightAnchor == 0f)
+                {
+                    float rightMargin = TopLevelContainer.MarginRight;
+                    x = TopLevelCanvasItem.GetGlobalTransformWithCanvas().origin.x + (rightMargin - leftMargin) + XOffset;
+                }
+                else
+                {
+                    x = TopLevelCanvasItem.GetGlobalTransformWithCanvas().origin.x + (TopLevelCanvasItem.GetViewport().Size.x * TopLevelContainer.AnchorRight - TopLevelContainer.MarginLeft) + XOffset;
+                }
                 // place the tooltip directly to the right of the hovered item.
                 // hovered item's x origin + hovered item's width (viewport width * item's right anchor - item's left margin)
-                y = GetGlobalTransformWithCanvas().origin.y + YOffset;
-                x = TopLevelCanvasItem.GetGlobalTransformWithCanvas().origin.x + (TopLevelCanvasItem.GetViewport().Size.x * TopLevelContainer.AnchorRight - TopLevelContainer.MarginLeft);
-                GD.Print(TopLevelCanvasItem.GetGlobalTransformWithCanvas().origin.x);
-                GD.Print(TopLevelCanvasItem.GetViewport().Size.x);
+                GD.Print("origin x ", TopLevelCanvasItem.GetGlobalTransformWithCanvas().origin.x);
+                GD.Print("viewport width ", TopLevelCanvasItem.GetViewport().Size.x);
                 GD.Print(TopLevelContainer.AnchorRight);
                 GD.Print(TopLevelContainer.MarginLeft);
                 GD.Print(TopLevelCanvasItem.GetViewport().Size.x * TopLevelContainer.AnchorRight - TopLevelContainer.MarginLeft);
@@ -78,7 +88,22 @@ namespace Base.Resources.Ui
             else if (Alignment == Vector2.Down)
             {
                 x = GetGlobalTransformWithCanvas().origin.x + XOffset;
+                float bottomAnchor = TopLevelContainer.AnchorBottom;
+                float bottomMargin = TopLevelContainer.MarginBottom;
                 y = TopLevelCanvasItem.GetGlobalTransformWithCanvas().origin.y + (TopLevelCanvasItem.GetViewport().Size.y * TopLevelContainer.AnchorBottom - TopLevelContainer.MarginBottom);
+                GD.Print("origin y ", TopLevelCanvasItem.GetGlobalTransformWithCanvas().origin.y);
+                GD.Print("viewport height ", TopLevelCanvasItem.GetViewport().Size.y);
+                GD.Print(TopLevelContainer.AnchorBottom);
+                GD.Print(TopLevelContainer.MarginBottom);
+                if (bottomAnchor == 0f)
+                {
+                    float topMargin = TopLevelContainer.MarginTop;
+                    y = TopLevelCanvasItem.GetGlobalTransformWithCanvas().origin.y + (bottomMargin - topMargin) + YOffset;
+                }
+                else
+                {
+                    y = TopLevelCanvasItem.GetGlobalTransformWithCanvas().origin.y + (TopLevelCanvasItem.GetViewport().Size.y * TopLevelContainer.AnchorBottom - TopLevelContainer.MarginBottom);
+                }
             }
             instance.RectPosition = new Vector2(x, y);
 

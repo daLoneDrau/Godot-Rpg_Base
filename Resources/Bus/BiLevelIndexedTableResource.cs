@@ -21,11 +21,16 @@ namespace Base.Resources.Bus
         /// <summary>
         /// Gets a random element from the table.
         /// </summary>
+        /// <param name="rollModifer">any modifiers applied to the die roll</param>
         /// <returns></returns>
-        public R GetRandomElement(K k)
+        public R GetRandomElement(K k, int rollModifer = 0)
         {
             R val = null;
-            int roll = DieRoll.Roll();
+            int roll = DieRoll.Roll() + rollModifer;
+            if (roll < 1)
+            {
+                roll = 1;
+            }
             foreach (KeyValuePair<Vector2, R> entry in Elements[k])
             {
                 Vector2 range = entry.Key;

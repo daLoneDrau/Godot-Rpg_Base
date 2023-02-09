@@ -29,6 +29,7 @@ namespace Base.Resources.Ui.Themes.Commodore64
         }
         protected override async void ButtonDown()
         {
+            GD.Print("Button Down");
             // GD.Print("ButtonDown drawMode ", GetDrawMode(), OS.GetUnixTime());
             // when the button is down, change the inner color to light purple.
             outerStyle.BgColor = new Godot.Color("887ecb");
@@ -39,12 +40,17 @@ namespace Base.Resources.Ui.Themes.Commodore64
         }
         protected override async void ButtonPressed()
         {
+            GD.Print("Button Pressed");
             // GD.Print("ButtonPressed drawMode ", GetDrawMode(), OS.GetUnixTime());
             // after release, change the inner color to dark purple.
             outerStyle.BgColor = new Godot.Color("50459b");
 
             // innerStyle.BgColor = new Godot.Color("50459b");
             // inner.AddColorOverride("font_color", new Godot.Color("887ecb"));
+        }
+        protected override async void ButtonUp()
+        {
+            GD.Print("Button Up");
         }
     }
 }
