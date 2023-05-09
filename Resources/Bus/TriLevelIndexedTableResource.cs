@@ -22,10 +22,14 @@ namespace Base.Resources.Bus
         /// Gets a random element from the table.
         /// </summary>
         /// <returns></returns>
-        public R GetRandomElement(K0 k0, K1 k1)
+        public R GetRandomElement(K0 k0, K1 k1, int rollModifer = 0)
         {
             R val = null;
-            int roll = DieRoll.Roll();
+            int roll = DieRoll.Roll() + rollModifer;
+            if (roll < 1)
+            {
+                roll = 1;
+            }
             foreach (KeyValuePair<Vector2, R> entry in Elements[k0][k1])
             {
                 Vector2 range = entry.Key;
