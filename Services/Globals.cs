@@ -440,6 +440,7 @@ namespace Bus.Services
         
         #region PC EVENT SIGNALS
         public const int PLAYER_EVENT_UPDATE_ATTRIBUTES = 0;
+        public const int PLAYER_EVENT_UPDATE_INVENTORY = 1;
         #endregion
         public const int MAX_SPELLS = 0;
         public const int MAX_EVENT_STACK = 800;

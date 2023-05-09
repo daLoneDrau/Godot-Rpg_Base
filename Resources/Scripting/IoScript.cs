@@ -1,6 +1,8 @@
 using Base.Bus;
 using Base.Exceptions;
 using Base.Resources.Data;
+using Base.Resources.Services;
+using Bus.Services;
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -38,7 +40,11 @@ namespace Base.Resources.Scripting
         /// <summary>
         /// the IoScript's variables.
         /// </summary>
-        private ScriptVariableSet variables;
+        private ScriptVariableSet variables = new ScriptVariableSet();
+        public IoScript()
+        {
+            Initialize();
+        }
         /// <summary>
         /// Executes a scripted action.
         /// </summary>
@@ -47,7 +53,11 @@ namespace Base.Resources.Scripting
         /// <returns></returns>
         public void Execute(ScriptableEventParameters parameters)
         {
-            this.scriptActions[parameters.EventName](parameters);
+            if (parameters.EventName == null)
+            {
+                parameters.EventName = GameVariablesDatabase.Instance.ScriptMessages[parameters.EventId];
+            }
+            scriptActions[parameters.EventName](parameters);
         }
         /// <summary>
         /// Gets a local variable value.
@@ -56,10 +66,10 @@ namespace Base.Resources.Scripting
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public T GetLocalVariableValue<T>(string name) {
-            if (!this.variables.Has(name)) {
+            if (!variables.Has(name)) {
                 throw new RPGException(ErrorMessage.INTERNAL_BAD_ARGUMENT, "Missing variable");
             }
-            return this.variables.Value<T>(name);
+            return variables.Value<T>(name);
         }
         /// <summary>
         /// Specialized initializer for sub-classes. The purpose is to define scripted events this IoScript responds to and to load event and broadcast listeners
@@ -68,7 +78,6 @@ namespace Base.Resources.Scripting
         /// <summary>
         /// Clears all local variables.
         /// </summary>
-        /// <param name="this.variables.Clear("></param>
         public void ClearLocalVariables() { this.variables.Clear(); }
         /// <summary>
         /// Determines if a IoScript has a variable.
@@ -88,7 +97,7 @@ namespace Base.Resources.Scripting
             if (name.Length == 0) {
                 throw new RPGException(ErrorMessage.INTERNAL_BAD_ARGUMENT, "key cannot be an empty string");
             }
-            this.variables.Set(name, value);
+            variables.Set(name, value);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Base.Resources.Bus
         {
             get
             {
-                return this.data;
+                return data;
             }
             set
             {
@@ -37,9 +37,9 @@ namespace Base.Resources.Bus
                 if (typeof(IoPcData).IsInstanceOfType(value)  && !this.IoFlags.Has(Globals.IO_PC)) {
                     throw new RPGException(ErrorMessage.INTERNAL_BAD_ARGUMENT, "InteractiveObject.data - cannot set PC data without setting PC flag first");
                 }
-                this.data = value;
-                if (this.data.Io == null) {
-                    this.data.Io = this;
+                data = value;
+                if (data.Io == null) {
+                    data.Io = this;
                 }
             }
         }
@@ -66,14 +66,14 @@ namespace Base.Resources.Bus
         {
             get
             {
-                return this.inventory;
+                return inventory;
             }
             set
             {
-                this.inventory = value;
-                if (this.inventory.Io == null)
+                inventory = value;
+                if (inventory.Io == null)
                 {
-                    this.inventory.Io = this;
+                    inventory.Io = this;
                 }
             }
         }
@@ -83,7 +83,7 @@ namespace Base.Resources.Bus
         public FlagSet IoFlags { get; private set; } = new FlagSet();
         private string localizedName
         {
-            get { return this.localizedName; }
+            get { return localizedName; }
             set
             {
                 if (value == null || value.Length == 0)
@@ -99,14 +99,14 @@ namespace Base.Resources.Bus
         private string mainEvent;
         public string MainEvent
         {
-            get { return this.mainEvent; }
+            get { return mainEvent; }
             set
             {
                 if (value != null &&
                         (value.ToLower() == "main" || value.Length == 0)) {
-                    this.mainEvent = null;
+                    mainEvent = null;
                 } else {
-                    this.mainEvent = value;
+                    mainEvent = value;
                 }
             }
         }

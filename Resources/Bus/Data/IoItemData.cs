@@ -34,7 +34,6 @@ namespace Base.Resources.Data
                         count = 0;
                     }
                 }
-                GD.Print("updating count");
                 // send signal that the count was updated.
                 // send a scriptable event to all owners of an Inventory that this IO has updated its item count
                 PublicBroadcastService.Instance.ScriptableEventChannel.Broadcast(new ScriptableEventParameters()
@@ -53,12 +52,16 @@ namespace Base.Resources.Data
         /// the list of equipment modifiers.
         /// </summary>
         private EquipmentItemModifier[] elements;
+        protected EquipmentItemModifier[] Elements {
+            get { return elements; }
+            set { elements = value; }
+        }
         /// <summary>
         /// the max number cumulable
         /// </summary>
         public int MaxCount { get; set; } = 1;
         /// <summary>
-        /// the item's pruice.
+        /// the item's price.
         /// </summary>
         /// <value></value>
         public float Price { get; set; }
@@ -77,12 +80,12 @@ namespace Base.Resources.Data
         /// <param name="element">the element</param>
         /// <returns>the element modifier object</returns>
         public EquipmentItemModifier GetElementModifier(int element) {
-            if (element >= this.elements.Length) {
-                for (int i = this.elements.Length, li = element; i <= li; i++) {
-                    this.elements = ArrayUtilities.Instance.ExtendArray(new EquipmentItemModifier(), this.elements);
+            if (element >= elements.Length) {
+                for (int i = elements.Length, li = element; i <= li; i++) {
+                    elements = ArrayUtilities.Instance.ExtendArray(new EquipmentItemModifier(), elements);
                 }
             }
-            return this.elements[element];
+            return elements[element];
         }
     }
 }

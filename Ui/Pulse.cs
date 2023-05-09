@@ -2,6 +2,7 @@ using Godot;
 
 namespace Base.Ui
 {
+    [Tool]
     public class Pulse : RichTextEffect
     {
         public static string bbcode = "pulse";

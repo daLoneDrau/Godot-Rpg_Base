@@ -12,6 +12,7 @@ namespace Base.Resources.Services
         /// <value></value>
         public static DiceRoller Instance { get; private set; }
         public Dice ONE_D2 { get; private set; }
+        public Dice ONE_D3 { get; private set; }
         public Dice ONE_D4 { get; private set; }
         public Dice ONE_D6 { get; private set; }
         public Dice TWO_D6 { get; private set; }
@@ -36,6 +37,7 @@ namespace Base.Resources.Services
         {
             Instance = this;
             ONE_D2 = new Dice(1, 2, this);
+            ONE_D3 = new Dice(1, 2, this);
             ONE_D4 = new Dice(1, 4, this);
             ONE_D6 = new Dice(1, 6, this);
             TWO_D6 = new Dice(2, 6, this);

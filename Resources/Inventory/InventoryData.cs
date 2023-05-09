@@ -21,6 +21,13 @@ namespace Base.Resources.Inventory
         /// </summary>
         protected InventorySlot[] slots;
         /// <summary>
+        /// Protected constructor.
+        /// </summary>
+        protected InventoryData()
+        {
+            Init();
+        }
+        /// <summary>
         /// Tries to put an object in an IO's inventory.
         /// </summary>
         /// <param name="ioid"></param>
@@ -34,9 +41,9 @@ namespace Base.Resources.Inventory
             bool can = false;
             // try to stack
             bool stacked = false;
-            for (int i = this.slots.Length - 1; i >= 0; i--)
+            for (int i = slots.Length - 1; i >= 0; i--)
             {
-                InteractiveObject ioInSlot = IoFactory.Instance.GetIo(this.slots[i].Io);
+                InteractiveObject ioInSlot = IoFactory.Instance.GetIo(slots[i].IoId);
                 if (ioInSlot != null
                         && ((IoItemData)ioInSlot.Data).StackSize > 1
                         && IoFactory.Instance.IsSameObject(ioid, ioInSlot.RefId))
@@ -75,11 +82,11 @@ namespace Base.Resources.Inventory
                 }
             }
             if (!stacked) {
-                for (int i = 0, li = this.slots.Length; i < li; i++) {
-                    if (this.slots[i].Io == -1) {
-                        this.slots[i].Io = ioid;
-                        this.slots[i].Show = true;
-                        this.DeclareInInventory(ioid);
+                for (int i = 0, li = slots.Length; i < li; i++) {
+                    if (slots[i].IoId == -1) {
+                        slots[i].IoId = ioid;
+                        slots[i].Show = true;
+                        DeclareInInventory(ioid);
                         can = true;
                         break;
                     }
@@ -93,7 +100,7 @@ namespace Base.Resources.Inventory
         public void CleanInventory()
         {
             for (int i = this.slots.Length - 1; i >= 0; i--) {
-                this.slots[i].Io = -1;
+                this.slots[i].IoId = -1;
                 this.slots[i].Show = true;
             }
         }
@@ -120,12 +127,17 @@ namespace Base.Resources.Inventory
                 TargetIo = ioid
             });
         }
+        /// <summary>
+        /// Gets the item in a specific inventory slot.  If no item is there, return null.
+        /// </summary>
+        /// <param name="i">the inventory slot</param>
+        /// <returns></returns>
         public InteractiveObject GetItemInSlot(int i)
         {
             InteractiveObject item = null;
-            if (slots[i].Io >= 0 && IoFactory.Instance.IsValidIo(slots[i].Io))
+            if (slots[i].IoId >= 0 && IoFactory.Instance.IsValidIo(slots[i].IoId))
             {
-                item = IoFactory.Instance.GetIo(slots[i].Io);
+                item = IoFactory.Instance.GetIo(slots[i].IoId);
             }
             return item;
         }
@@ -140,8 +152,8 @@ namespace Base.Resources.Inventory
                 throw new RPGException(ErrorMessage.INTERNAL_BAD_ARGUMENT, "InventoryData.isInInventory() requires a valid IO");
             }
             bool isIn = false;
-            for (int i = this.slots.Length - 1; i >= 0; i--) {
-                int ioInSlot = this.slots[i].Io;
+            for (int i = slots.Length - 1; i >= 0; i--) {
+                int ioInSlot = slots[i].IoId;
                 if (ioid == ioInSlot) {
                     isIn = true;
                     break;
@@ -165,8 +177,8 @@ namespace Base.Resources.Inventory
             }
             bool removed = false;
             for (int i = this.slots.Length - 1; i >= 0; i--) {
-                if (ioid == this.slots[i].Io) {
-                    this.slots[i].Io = -1;
+                if (ioid == this.slots[i].IoId) {
+                    this.slots[i].IoId = -1;
                     this.slots[i].Show = true;
                     removed = true;
                     break;
@@ -187,8 +199,8 @@ namespace Base.Resources.Inventory
                 throw new RPGException(ErrorMessage.INTERNAL_BAD_ARGUMENT, "InventoryData.ReplaceInInventory() requires a valid IO to be replaced with");
             }
             for (int i = this.slots.Length - 1; i >= 0; i--) {
-                if (ioid == this.slots[i].Io) {
-                    this.slots[i].Io = replacedWith;
+                if (ioid == this.slots[i].IoId) {
+                    this.slots[i].IoId = replacedWith;
                     this.slots[i].Show = true;
                     break;
                 }

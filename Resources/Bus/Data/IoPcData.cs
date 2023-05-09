@@ -64,7 +64,7 @@ namespace Base.Resources.Data
                 {
                     value = 0;
                 }
-                this.level = value;
+                level = value;
                 // broadcast signal that attributes have changed
                 PublicBroadcastService.Instance.PcEventChannel.Broadcast(new PcEventSignal(Io.RefId, Globals.PLAYER_EVENT_UPDATE_ATTRIBUTES));
             }
@@ -141,15 +141,15 @@ namespace Base.Resources.Data
             // TODO - identify any equipment if needed
 
             // apply modifiers
-            foreach(PlayerAttribute attribute in this.Attributes.Attributes)
+            foreach(PlayerAttribute attribute in Attributes.Attributes)
             {
-                attribute.AdjustModifier(this.GetEquipmentModifiers(attribute.ElementModifier));
+                attribute.AdjustModifier(GetEquipmentModifiers(attribute.ElementModifier));
             }
             this.ApplyRulesModifiers();
             // apply percentage modifiers
             foreach(PlayerAttribute attribute in this.Attributes.Attributes)
             {
-                attribute.AdjustModifier(this.GetEquipmentPercentageModifiers(attribute.ElementModifier, attribute.Base));
+                attribute.AdjustModifier(GetEquipmentPercentageModifiers(attribute.ElementModifier, attribute.Base));
             }
             this.ApplyRulesPercentModifiers();
 
@@ -176,78 +176,161 @@ namespace Base.Resources.Data
             if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_DAGGER)
                     || ((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_1H)
                     || ((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_2H)
-                    || ((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_BOW)) {
-                if (IoFactory.Instance.IsValidIo(this.equipped[slot])) {
+                    || ((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_BOW))
+            {
+                if (IoFactory.Instance.IsValidIo(this.equipped[slot]))
+                {
                     // Unequip the old weapon
-                    this.Unequip(IoFactory.Instance.GetIo(this.equipped[slot]));
+                    Unequip(IoFactory.Instance.GetIo(this.equipped[slot]));
                 }
                 // equip the new weapon
-                this.equipped[slot] = itemIo.RefId;
+                equipped[slot] = itemIo.RefId;
+                GD.Print("\tEquipping ", itemIo.LocalizedName, " in slot ", slot);
+                
+                // send message to player that they are equipping an item
+                PublicBroadcastService.Instance.ScriptableEventChannel.Broadcast(new ScriptableEventParameters()
+                {
+                    EventId = Globals.SM_EQUIPIN,
+                    EventSender = itemIo,
+                    TargetIo = Io.RefId
+                });
+
+                // send message to IO that it is being unequipped
+                PublicBroadcastService.Instance.ScriptableEventChannel.Broadcast(new ScriptableEventParameters()
+                {
+                    EventId = Globals.SM_EQUIPIN,
+                    EventSender = Io,
+                    TargetIo = itemIo.RefId
+                });
                 // check to see if equipping a 2-handed weapon while holding a shield
-                if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_2H) || ((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_BOW)) {
+                if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_2H) || ((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_BOW))
+                {
                     slot = Globals.EQUIP_SLOT_SHIELD;
-                    if (IoFactory.Instance.IsValidIo(this.equipped[slot])) {
+                    if (IoFactory.Instance.IsValidIo(this.equipped[slot]))
+                    {
                         // Unequip shield
-                        this.Unequip(IoFactory.Instance.GetIo(this.equipped[slot]));
+                        Unequip(IoFactory.Instance.GetIo(this.equipped[slot]));
                     }
                 }
-                } else if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_SHIELD)) {
+            }
+            else if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_SHIELD))
+            {
                 slot = Globals.EQUIP_SLOT_SHIELD;
-                if (IoFactory.Instance.IsValidIo(this.equipped[slot])) {
+                if (IoFactory.Instance.IsValidIo(equipped[slot]))
+                {
                     // Unequip the old shield
-                    this.Unequip(IoFactory.Instance.GetIo(this.equipped[slot]));
+                    Unequip(IoFactory.Instance.GetIo(equipped[slot]));
                 }
                 // equip the new shield
-                this.equipped[slot] = itemIo.RefId;
+                equipped[slot] = itemIo.RefId;
+                GD.Print("\tEquipping ", itemIo.LocalizedName, " in slot ", slot);
+                
+                // send message to player that they are equipping an item
+                PublicBroadcastService.Instance.ScriptableEventChannel.Broadcast(new ScriptableEventParameters()
+                {
+                    EventId = Globals.SM_EQUIPIN,
+                    EventSender = itemIo,
+                    TargetIo = Io.RefId
+                });
+
+                // send message to IO that it is being unequipped
+                PublicBroadcastService.Instance.ScriptableEventChannel.Broadcast(new ScriptableEventParameters()
+                {
+                    EventId = Globals.SM_EQUIPIN,
+                    EventSender = Io,
+                    TargetIo = itemIo.RefId
+                });
                 // check to see if equipping a shield while holding a 2-handed weapon
                 slot = Globals.EQUIP_SLOT_WEAPON;
-                if (IoFactory.Instance.IsValidIo(this.equipped[slot])) {
+                if (IoFactory.Instance.IsValidIo(equipped[slot]))
+                {
                     InteractiveObject wpnIo = IoFactory.Instance.GetIo(this.equipped[slot]);
-                    if (((IoItemData)wpnIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_2H) || ((IoItemData)wpnIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_BOW)) {
+                    if (((IoItemData)wpnIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_2H) || ((IoItemData)wpnIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_BOW))
+                    {
                         // Unequip weapon
-                        this.Unequip(wpnIo);
+                        Unequip(wpnIo);
                     }
                 }
-            } else if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_RING)) {
+            }
+            else if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_RING))
+            {
                 // TODO - check to see if player already has that type of ring equipped
 
                 // check to see whic finger is available. left ring is selected first
                 slot = Globals.EQUIP_SLOT_RING_LEFT;
-                if (IoFactory.Instance.IsValidIo(this.equipped[slot])) {
+                if (IoFactory.Instance.IsValidIo(equipped[slot])) {
                     slot = Globals.EQUIP_SLOT_RING_RIGHT;
                 }
-                if (IoFactory.Instance.IsValidIo(this.equipped[slot])) {
+                if (IoFactory.Instance.IsValidIo(equipped[slot])) {
                     slot = Globals.EQUIP_SLOT_RING_LEFT;
                 }
-                if (IoFactory.Instance.IsValidIo(this.equipped[slot])) {
+                if (IoFactory.Instance.IsValidIo(equipped[slot])) {
                     // Unequip the old ring
-                    this.Unequip(IoFactory.Instance.GetIo(this.equipped[slot]));
+                    Unequip(IoFactory.Instance.GetIo(equipped[slot]));
                 }
                 // equip the new ring
-                this.equipped[slot] = itemIo.RefId;
+                equipped[slot] = itemIo.RefId;
+                GD.Print("\tEquipping ", itemIo.LocalizedName, " in slot ", slot);
+                
+                // send message to player that they are equipping an item
+                PublicBroadcastService.Instance.ScriptableEventChannel.Broadcast(new ScriptableEventParameters()
+                {
+                    EventId = Globals.SM_EQUIPIN,
+                    EventSender = itemIo,
+                    TargetIo = Io.RefId
+                });
+
+                // send message to IO that it is being unequipped
+                PublicBroadcastService.Instance.ScriptableEventChannel.Broadcast(new ScriptableEventParameters()
+                {
+                    EventId = Globals.SM_EQUIPIN,
+                    EventSender = Io,
+                    TargetIo = itemIo.RefId
+                });
             } else if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_ARMOR)
                     || ((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_LEGGINGS)
-                    || ((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_HELMET)) {
-                if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_ARMOR)) {
+                    || ((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_HELMET))
+            {
+                if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_ARMOR))
+                {
                     slot = Globals.EQUIP_SLOT_TORSO;
                 }
-                if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_LEGGINGS)) {
+                if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_LEGGINGS))
+                {
                     slot = Globals.EQUIP_SLOT_LEGGINGS;
                 }
-                if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_HELMET)) {
+                if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_HELMET))
+                {
                     slot = Globals.EQUIP_SLOT_HELMET;
                 }
-                if (IoFactory.Instance.IsValidIo(this.equipped[slot])) {
+                if (IoFactory.Instance.IsValidIo(equipped[slot])) {
                     // Unequip the old armour
-                    this.Unequip(IoFactory.Instance.GetIo(this.equipped[slot]));
+                    Unequip(IoFactory.Instance.GetIo(equipped[slot]));
                 }
                 // equip the new armour
-                this.equipped[slot] = itemIo.RefId;
-                this.RecreateMesh();
+                equipped[slot] = itemIo.RefId;
+                GD.Print("\tEquipping ", itemIo.LocalizedName, " in slot ", slot);
+                
+                // send message to player that they are equipping an item
+                PublicBroadcastService.Instance.ScriptableEventChannel.Broadcast(new ScriptableEventParameters()
+                {
+                    EventId = Globals.SM_EQUIPIN,
+                    EventSender = itemIo,
+                    TargetIo = Io.RefId
+                });
+
+                // send message to IO that it is being unequipped
+                PublicBroadcastService.Instance.ScriptableEventChannel.Broadcast(new ScriptableEventParameters()
+                {
+                    EventId = Globals.SM_EQUIPIN,
+                    EventSender = Io,
+                    TargetIo = itemIo.RefId
+                });
+                RecreateMesh();
             } else {
                 throw new RPGException(ErrorMessage.INTERNAL_BAD_ARGUMENT, "IoPcData.equip() cannot equip unrecognized object type");
             }
-            this.ComputeFullStats();
+            ComputeFullStats();
         }
         /// <summary>
         /// Gets the total modifier for a specific element type from the equipment the player is wielding.
@@ -257,10 +340,10 @@ namespace Base.Resources.Data
         public int GetEquipmentModifiers(int element)
         {
             int toadd = 0;
-            for (int i = this.equipped.Length - 1; i >= 0; i--) {
-                if (IoFactory.Instance.IsValidIo(this.equipped[i]))
+            for (int i = equipped.Length - 1; i >= 0; i--) {
+                if (IoFactory.Instance.IsValidIo(equipped[i]))
                 {
-                    InteractiveObject itemIo = IoFactory.Instance.GetIo(this.equipped[i]);
+                    InteractiveObject itemIo = IoFactory.Instance.GetIo(equipped[i]);
                     if (itemIo.IoFlags.Has(Globals.IO_ITEM))
                     {
                         EquipmentItemModifier modifier = ((IoItemData)itemIo.Data).GetElementModifier(element);
@@ -315,6 +398,19 @@ namespace Base.Resources.Data
             }
             return type;
         }
+        /// <summary>
+        /// Gets the item the pc has equipped in a specific slot.
+        /// </summary>
+        /// <param name="slot">the slot</param>
+        /// <returns></returns>
+        public InteractiveObject GetEquippedItem(int slot)
+        {
+            InteractiveObject io = null;
+            if (IoFactory.Instance.IsValidIo(equipped[slot])) {
+                io = IoFactory.Instance.GetIo(equipped[slot]);
+            }
+            return io;
+        }
         public bool HasEquipped(InteractiveObject itemIo)
         {
             if (!IoFactory.Instance.IsValidIo(itemIo)) {
@@ -362,18 +458,25 @@ namespace Base.Resources.Data
         /// <param name="itemDestroyed">if false, the item is moved to inventory or put in front of the player; otherwise it is destroyed.</param>
         public void Unequip(InteractiveObject itemIo, bool itemDestroyed = false)
         {
-            if (!IoFactory.Instance.IsValidIo(itemIo)) {
+            if (!IoFactory.Instance.IsValidIo(itemIo))
+            {
                 throw new RPGException(ErrorMessage.INTERNAL_BAD_ARGUMENT, "IoPcData.unequip() requires a valid IO");
             }
-            if (!this.HasEquipped(itemIo)) {
+            if (!HasEquipped(itemIo))
+            {
                 throw new RPGException(ErrorMessage.INTERNAL_BAD_ARGUMENT, "IoPcData.unequip() item was not equipped");
             }
-            for (var i = this.equipped.Length - 1; i >= 0; i--) {
-                if (this.equipped[i] == itemIo.RefId) {
-                    this.equipped[i] = -1;
-                    if (!itemDestroyed) {
-                        if (!this.Io.Inventory.CanBePutInInventory(itemIo.RefId)) {
-                            this.PutInFrontOfPlayer(itemIo, 1);
+            for (var i = equipped.Length - 1; i >= 0; i--)
+            {
+                if (equipped[i] == itemIo.RefId)
+                {
+                    equipped[i] = -1;
+                    GD.Print("\tUN-Equipping ", itemIo.LocalizedName, " in slot ", i);
+                    if (!itemDestroyed)
+                    {
+                        if (!Io.Inventory.CanBePutInInventory(itemIo.RefId))
+                        {
+                            PutInFrontOfPlayer(itemIo, 1);
                         }
                     }
                     // send message to player that they are unequipping an item
@@ -396,10 +499,11 @@ namespace Base.Resources.Data
             }
             if (((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_HELMET)
                     || ((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_ARMOR)
-                    || ((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_LEGGINGS)) {
-                this.RecreateMesh();
+                    || ((IoItemData)itemIo.Data).TypeFlags.Has(Globals.OBJECT_TYPE_LEGGINGS))
+            {
+                RecreateMesh();
             }
-            this.ComputeFullStats();
+            ComputeFullStats();
         }
         /// <summary>
         /// Unequips all items.

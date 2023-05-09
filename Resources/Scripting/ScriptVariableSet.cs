@@ -208,7 +208,7 @@ namespace Base.Resources.Scripting
         public bool Has(string name) { return this.set.ContainsKey(name); }
         public void Remove(string key)
         {
-            this.set.Remove(key);
+            set.Remove(key);
         }
         /// <summary>
         /// Sets a script variable's value.
@@ -217,7 +217,7 @@ namespace Base.Resources.Scripting
         /// <param name="value">the variable's value</param>
         public void Set(string name, object value)
         {
-            if (this.set.ContainsKey(name))
+            if (set.ContainsKey(name))
             {
                 set[name].Set(value);
             }
@@ -225,7 +225,7 @@ namespace Base.Resources.Scripting
             {
                 ScriptVariable variable = new ScriptVariable();
                 variable.Set(value);
-                this.set.Add(name, variable);
+                set.Add(name, variable);
             }
         }
         /// <summary>
@@ -236,13 +236,13 @@ namespace Base.Resources.Scripting
         /// <returns>the value</returns>
         public T Value<T>(string name)
         {
-            if (!this.set.ContainsKey(name))
+            if (!set.ContainsKey(name))
             {
                 throw new RPGException(ErrorMessage.INTERNAL_BAD_ARGUMENT, "ScriptVariableSet.Value() - variable doesn't exist");
             }
             else
             {
-                return this.set[name].Value<T>();
+                return set[name].Value<T>();
             }
         }
     }

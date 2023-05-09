@@ -76,8 +76,10 @@ namespace Base.Resources.Ui
                 // hovered item's x origin + hovered item's width (viewport width * item's right anchor - item's left margin)
                 GD.Print("origin x ", TopLevelCanvasItem.GetGlobalTransformWithCanvas().origin.x);
                 GD.Print("viewport width ", TopLevelCanvasItem.GetViewport().Size.x);
-                GD.Print(TopLevelContainer.AnchorRight);
-                GD.Print(TopLevelContainer.MarginLeft);
+                GD.Print("AnchorRight ", TopLevelContainer.AnchorRight);
+                GD.Print("MarginLeft ", TopLevelContainer.MarginLeft);
+                GD.Print("MarginRight ", TopLevelContainer.MarginRight);
+                GD.Print("x ", x);
                 GD.Print(TopLevelCanvasItem.GetViewport().Size.x * TopLevelContainer.AnchorRight - TopLevelContainer.MarginLeft);
             }
             else if (Alignment == Vector2.Left)

@@ -2,6 +2,7 @@ using Godot;
 
 namespace Base.Ui
 {
+    [Tool]
     public class Ghost : RichTextEffect
     {
         public static string bbcode = "ghost";

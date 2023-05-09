@@ -55,7 +55,7 @@ namespace Base.Resources.Services
         /// <summary>
         /// the game's global variable set.
         /// </summary>
-        public ScriptVariableSet GlobalVariables { get; private set; }
+        public ScriptVariableSet GlobalVariables { get; private set; } = new ScriptVariableSet();
         public EventsWithDisabledFlagsIndexer EventsWithDisabledFlags { get; private set; }
         public ScriptMessagesIndexer ScriptMessages { get; private set; }
         #region VARIABLE INDEXERS

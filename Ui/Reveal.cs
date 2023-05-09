@@ -3,6 +3,7 @@ using Godot.Collections;
 
 namespace Base.Ui
 {
+    [Tool]
     public class Reveal : RichTextEffect
     {
         public static string bbcode = "reveal";

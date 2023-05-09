@@ -11,7 +11,7 @@ namespace Base.Resources.Events
         /// Reference to the singleton instance.
         /// </summary>
         /// <value></value>
-        public static PublicBroadcastService Instance { get; private set; }
+        public static PublicBroadcastService Instance { get; protected set; }
         /// <summary>
         /// Called when the node enters the scene tree for the first time.
         /// </summary>

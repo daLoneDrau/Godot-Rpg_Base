@@ -16,13 +16,13 @@ namespace Base.Resources.Data
         /// </summary>
         public InteractiveObject Io
         {
-            get { return this.io; }
+            get { return io; }
             set
             {
                 if (value == null) {
                     throw new RPGException(ErrorMessage.BAD_PARAMETERS, "IoData.Io - cannot be null");
                 }
-                this.io = value;
+                io = value;
                 if (io.Data == null)
                 {
                     io.Data = this;
