@@ -65,7 +65,6 @@ namespace Base.Resources.Services
         public VariableIndexer<string, StringVariable> StringVariable { get; private set; }
         public VariableIndexer<string, StringArrayVariable> StringArrayVariable { get; private set; }
         #endregion
-        private const string RESOURCE_BASE = "res://resources";
         /// <summary>
         /// Recursively loads a directory, storing all identifiable resources in variable indexers.
         /// </summary>
@@ -73,7 +72,7 @@ namespace Base.Resources.Services
         private void LoadDirectory(params string[] path)
         {
             PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
-            sb.Append(RESOURCE_BASE);
+            sb.Append(GameController.Instance.VariablesFolderPath);
             for (int i = 0, li = path.Length; i < li; i++) {
                 sb.Append("/");
                 sb.Append(path[i]);
@@ -99,7 +98,7 @@ namespace Base.Resources.Services
                         string key = fileName.Substr(0, fileName.Length - 5);
                         
                         sb.Length = 0;
-                        sb.Append(RESOURCE_BASE);
+                        sb.Append(GameController.Instance.VariablesFolderPath);
                         for (int i = 0, li = arr.Length; i < li; i++) {
                             sb.Append("/");
                             sb.Append(arr[i]);
