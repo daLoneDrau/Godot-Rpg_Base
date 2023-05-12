@@ -72,7 +72,7 @@ namespace Base.Resources.Services
         private void LoadDirectory(params string[] path)
         {
             PooledStringBuilder sb = StringBuilderPool.Instance.GetStringBuilder();
-            sb.Append(GameController.Instance.VariablesFolderPath);
+            sb.Append(GameController.Instance.ResourcesFolderPath);
             for (int i = 0, li = path.Length; i < li; i++) {
                 sb.Append("/");
                 sb.Append(path[i]);
@@ -88,17 +88,17 @@ namespace Base.Resources.Services
                     arr = ArrayUtilities.Instance.ExtendArray(fileName, arr);
                     if (dir.CurrentIsDir())
                     {
-                        GD.Print("Found directory:", fileName);
+                        // GD.Print("Found directory:", fileName);
                         LoadDirectory(arr);
                     }
                     else
                     {
-                        GD.Print("Found file:", fileName);
+                        // GD.Print("Found file:", fileName);
 
                         string key = fileName.Substr(0, fileName.Length - 5);
                         
                         sb.Length = 0;
-                        sb.Append(GameController.Instance.VariablesFolderPath);
+                        sb.Append(GameController.Instance.ResourcesFolderPath);
                         for (int i = 0, li = arr.Length; i < li; i++) {
                             sb.Append("/");
                             sb.Append(arr[i]);

@@ -21,6 +21,6 @@ namespace Base.Resources.Services
         /// The path to the Variables folder.  The default path is "res://resources".
         /// </summary>
         /// <value></value>
-        public string VariablesFolderPath { get; protected set; } = "res://resources";
+        public string ResourcesFolderPath { get; protected set; } = "res://resources";
     }
 }
