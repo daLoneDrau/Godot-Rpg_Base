@@ -16,8 +16,8 @@ namespace Base.Resources.Ui.Themes.C64GEOS
         private StyleBoxFlat outerStyle;
         protected override void Initialize()
         {
-            borderDefault = (Texture)ResourceLoader.Load("res://art/themes/commodore_64_geos/widgets/nav-item-border.jpg");
-            borderSelected = (Texture)ResourceLoader.Load("res://art/themes/commodore_64_geos/widgets/nav-item-border-selected.jpg");
+            borderDefault = (Texture)ResourceLoader.Load("res://theme/commodore_64_geos/widgets/nav-item-border.jpg");
+            borderSelected = (Texture)ResourceLoader.Load("res://theme/commodore_64_geos/widgets/nav-item-border-selected.jpg");
             group = this.GetButtonGroup();
             // GD.Print("Initialize ", this.GetParent().GetChildren());
         }
