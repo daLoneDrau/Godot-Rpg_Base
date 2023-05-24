@@ -31,8 +31,9 @@ namespace Base.Resources.Ui.Themes.Commodore64
         {
             GD.Print("Button Down");
             // GD.Print("ButtonDown drawMode ", GetDrawMode(), OS.GetUnixTime());
-            // when the button is down, change the inner color to light purple.
+            // when the button is down, change the inner color to light purple and remove the shadow
             outerStyle.BgColor = new Godot.Color("887ecb");
+            outerStyle.ShadowSize = 0;
 
             // change the label's style
             // innerStyle.BgColor = new Godot.Color("887ecb");
@@ -42,8 +43,9 @@ namespace Base.Resources.Ui.Themes.Commodore64
         {
             GD.Print("Button Pressed");
             // GD.Print("ButtonPressed drawMode ", GetDrawMode(), OS.GetUnixTime());
-            // after release, change the inner color to dark purple.
+            // after release, change the inner color to dark purple and add the shadow back
             outerStyle.BgColor = new Godot.Color("50459b");
+            outerStyle.ShadowSize = 4;
 
             // innerStyle.BgColor = new Godot.Color("50459b");
             // inner.AddColorOverride("font_color", new Godot.Color("887ecb"));
